@@ -5,7 +5,7 @@ from loss_funcs import CrossEntropyLoss
 
 from models import ConvNet
 
-from trainers import Trainer
+from trainers import Trainer, MPTrainer
 from testers import Tester
 
 import numpy as np
@@ -35,8 +35,8 @@ print(model)
 print("Total number of parameters =", np.sum(
     [np.prod(parameter.shape) for parameter in model.parameters()]))
 
-trainer = Trainer(model, train_dataloader=train_dataloader, valid_dataloader=valid_dataloader,
-                  train_epochs=2, learning_rate=0.001, loss_func=loss_func, optimization_method='adam')
+trainer = MPTrainer(model, train_dataloader=train_dataloader, valid_dataloader=valid_dataloader,
+                  train_epochs=20, valid_epochs=2, learning_rate=0.001, loss_func=loss_func, optimization_method='adam')
 
 model, losses, accuracies = trainer.run()
 

@@ -2,8 +2,19 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from .MNIST_ConvNet import ConvNet
+from .ConvNet import ConvNet
+from .FFNN import NeuralNet as FeedForwardNN
+from .LRP import LRPModel
+from .ResNet import ResNet
+from .VGG import VGG11, VGG13, VGG16, VGG19
 
 __all__ = [
-    'ConvNet'
+    'ConvNet',
+    'FeedForwardNN',
+    'LRPModel',
+    'ResNet',
+    'VGG11',
+    'VGG13',
+    'VGG16',
+    'VGG19'
 ]

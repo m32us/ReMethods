@@ -5,7 +5,9 @@ import torch
 import torch.optim as optim
 
 
-class Trainer(object):
+class MPTrainer(object):
+    """Mixed Precision Training Strategy for Trainer implementation.
+    """
     def __init__(self,
                  model=None,
                  train_dataloader=None,
@@ -14,7 +16,7 @@ class Trainer(object):
                  valid_epochs=10,
                  learning_rate=0.5,
                  lr_decay=0,
-                 weight_decay=0.01,
+                 weight_decay=0,
                  scheduler=None,
                  optimization_method='sgd',
                  saved_epochs=None,
@@ -24,6 +26,7 @@ class Trainer(object):
                  use_gpu=True,
                  loss_func=None
                  ):
+
         # Model architecture
         self.model = model
 
@@ -86,7 +89,9 @@ class Trainer(object):
         self.best_valacc = 0.0
         self.best_epoch = 0.0
 
-    def train_one_step(self,):
+    def train_one_step(self, scaler, max_norm=1.5):
+        # Completed zero the parameter gradients outside this function
+
         self.model.train()  # Set model to training mode
 
         running_loss = 0.0
@@ -107,12 +112,24 @@ class Trainer(object):
 
             # forward
             with torch.set_grad_enabled(mode=True):
-                outputs = self.model(inputs)
-                _, preds = torch.max(outputs, 1)
-                loss = self.loss_func(outputs, labels)
 
-            loss.backward()
-            self.optimizer.step()
+                with torch.cuda.amp.autocast():
+                    outputs = self.model(inputs)
+                    _, preds = torch.max(outputs, 1)
+                    loss = self.loss_func(outputs, labels)
+
+            # scale gradint and perform backward pass
+            #loss.backward()
+            scaler.scale(loss).backward()
+
+            # before gradient clipping the optimizer parameters must be unscaled.
+            scaler.unscale_(self.optimizer)
+
+            # perform optimization step
+            # self.optimizer.step()
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=max_norm)
+            scaler.step(self.optimizer)
+            scaler.update()
 
             running_loss += loss.item() * inputs.size(0)
             running_corrects += torch.sum(preds == labels.data)
@@ -142,9 +159,10 @@ class Trainer(object):
             # zero the parameter gradients
             self.optimizer.zero_grad()
 
-            outputs = self.model(inputs)
-            _, preds = torch.max(outputs, 1)
-            loss = self.loss_func(outputs, labels)
+            with torch.cuda.amp.autocast():
+                outputs = self.model(inputs)
+                _, preds = torch.max(outputs, 1)
+                loss = self.loss_func(outputs, labels)
 
             running_loss += loss.item() * inputs.size(0)
             running_corrects += torch.sum(preds == labels.data)
@@ -183,8 +201,6 @@ class Trainer(object):
 
         self.model.load_state_dict(state_dict)
         self.optimizer.load_state_dict(state['optimizer'])
-
-        return self.model
 
     def run(self):
         # Check use GPU or CPU
@@ -227,6 +243,8 @@ class Trainer(object):
 
         losses, accuracies = dict(train=[], val=[]), dict(train=[], val=[])
 
+        scaler = torch.cuda.amp.GradScaler()
+
         for epoch in range(self.train_epochs):
             if self.log_interval is not None and epoch % self.log_interval == 0:
                 logging.info(
@@ -235,7 +253,7 @@ class Trainer(object):
 
             if epoch % self.valid_epochs != 0:
                 phase = 'train'
-                epoch_loss, epoch_acc = self.train_one_step()
+                epoch_loss, epoch_acc = self.train_one_step(scaler=scaler)
                 losses[phase].append(epoch_loss)
                 accuracies[phase].append(epoch_acc)
 

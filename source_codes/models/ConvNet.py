@@ -14,7 +14,7 @@ class ConvNet(nn.Module):
         self.non_linearity2 = nn.ReLU()
         self.max_pool2 = nn.MaxPool2d(kernel_size=2, stride=2)
 
-        self.fc = nn.Linear(8*8*32, num_classes)
+        self.classifier = nn.Linear(8*8*32, num_classes)
 
     def forward(self, x):
         x = self.conv1(x)
@@ -28,5 +28,5 @@ class ConvNet(nn.Module):
         x = self.non_linearity2(x)
 
         x = x.reshape(x.size(0), -1)
-        x = self.fc(x)
+        x = self.classifier(x)
         return x
