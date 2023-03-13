@@ -20,13 +20,13 @@ Useful resources:
 
 ## How to run project
 
-TODO
+Read the README in source codes folder.
 
 ## LICENSE
 
-MIT LICENSE
+[MIT LICENSE](./LICENSE)
 
-## Ciation
+## Citation
 
 ```
 @misc{blogpost,
