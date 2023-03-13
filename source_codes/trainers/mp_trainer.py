@@ -8,6 +8,7 @@ import torch.optim as optim
 class MPTrainer(object):
     """Mixed Precision Training Strategy for Trainer implementation.
     """
+
     def __init__(self,
                  model=None,
                  train_dataloader=None,
@@ -31,12 +32,12 @@ class MPTrainer(object):
         self.model = model
 
         # Dataloader
-        self.train_dataloader = train_dataloader # Train dataloader
-        self.valid_dataloader = valid_dataloader # Valid dataloader
+        self.train_dataloader = train_dataloader  # Train dataloader
+        self.valid_dataloader = valid_dataloader  # Valid dataloader
 
         # Config for train and valid epochs
-        self.train_epochs = train_epochs # number of training epochs
-        self.valid_epochs = valid_epochs # interval size for validation
+        self.train_epochs = train_epochs  # number of training epochs
+        self.valid_epochs = valid_epochs  # interval size for validation
 
         # Config for learning rate
         self.learning_rate = learning_rate
@@ -62,8 +63,31 @@ class MPTrainer(object):
         # Adagrad
         # AdaDelta
         # Adam
-        self.optmization_method = optimization_method
-        self.optimizer = None
+        if optimization_method == "Adagrad" or optimization_method == "adagrad":
+            self.optimizer = optim.Adagrad(
+                self.model.parameters(),
+                lr=self.learning_rate,
+                lr_decay=self.lr_decay,
+                weight_decay=self.weight_decay,
+            )
+        elif optimization_method == "Adadelta" or optimization_method == "adadelta":
+            self.optimizer = optim.Adadelta(
+                self.model.parameters(),
+                lr=self.learning_rate,
+                weight_decay=self.weight_decay,
+            )
+        elif optimization_method == "Adam" or optimization_method == "adam":
+            self.optimizer = optim.Adam(
+                self.model.parameters(),
+                lr=self.learning_rate,
+                weight_decay=self.weight_decay,
+            )
+        else:
+            self.optimizer = optim.SGD(
+                self.model.parameters(),
+                lr=self.learning_rate,
+                weight_decay=self.weight_decay,
+            )
 
         # Config saved epochs
         self.saved_epochs = saved_epochs
@@ -119,7 +143,7 @@ class MPTrainer(object):
                     loss = self.loss_func(outputs, labels)
 
             # scale gradint and perform backward pass
-            #loss.backward()
+            # loss.backward()
             scaler.scale(loss).backward()
 
             # before gradient clipping the optimizer parameters must be unscaled.
@@ -127,7 +151,8 @@ class MPTrainer(object):
 
             # perform optimization step
             # self.optimizer.step()
-            torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=max_norm)
+            torch.nn.utils.clip_grad_norm_(
+                self.model.parameters(), max_norm=max_norm)
             scaler.step(self.optimizer)
             scaler.update()
 
@@ -201,6 +226,8 @@ class MPTrainer(object):
 
         self.model.load_state_dict(state_dict)
         self.optimizer.load_state_dict(state['optimizer'])
+        
+        return self.model
 
     def run(self):
         # Check use GPU or CPU

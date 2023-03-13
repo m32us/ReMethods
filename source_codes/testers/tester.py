@@ -20,8 +20,7 @@ class Tester(object):
     def run(self):
         correct = 0
         total = 0
-        with torch.no_grad():
-            for images, labels in self.test_dataloader:
+        for images, labels in self.test_dataloader:
                 if self.use_gpu:
                     images = images.to(self.device)
                     labels = labels.to(self.device)
@@ -29,5 +28,6 @@ class Tester(object):
                 _, predicted = torch.max(outputs.data, 1)
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
-            logging.info('Accuracy of the network on the 10000 test images: {:.5f} '.format(
+        logging.info('Accuracy of the network on the 10000 test images: {:.5f} '.format(
                 correct / total))
+            

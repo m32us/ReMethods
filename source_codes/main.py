@@ -53,14 +53,15 @@ print("Total number of parameters =", np.sum(
     [np.prod(parameter.shape) for parameter in model.parameters()]))
 
 trainer = MPTrainer(model, train_dataloader=train_dataloader, valid_dataloader=valid_dataloader,
-                    train_epochs=2, valid_epochs=2, learning_rate=0.001, loss_func=loss_func, optimization_method='adam')
+                    train_epochs=25, valid_epochs=2, learning_rate=0.001, loss_func=loss_func, optimization_method='adam')
 
-model, losses, accuracies = trainer.run()
+# model, losses, accuracies = trainer.run()
 
-trainer.save_model('saved_models/vgg_mnist.model')
+# trainer.save_model('saved_models/vgg11_mnist.model')
 
-model_loaded = trainer.load_model('saved_models/vgg_mnist.model')
+model_loaded = trainer.load_model('saved_models/vgg11_mnist.model')
 
-tester = Tester(model=model, test_dataloader=test_dataloader, use_gpu=True)
+tester = Tester(model=model_loaded,
+                test_dataloader=test_dataloader, use_gpu=True)
 
 tester.run()

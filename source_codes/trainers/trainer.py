@@ -184,8 +184,6 @@ class Trainer(object):
         Args:
             save_path (str): path where the model is saved
         """
-        self.model.half()
-        
         state = {
             'state_dict': self.model.state_dict(),
             'best_valacc': self.best_valacc,
