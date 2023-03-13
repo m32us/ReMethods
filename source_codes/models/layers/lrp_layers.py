@@ -95,7 +95,7 @@ class RelevancePropagationMaxPool2d(nn.Module):
     def __init__(
         self,
         layer: torch.nn.MaxPool2d,
-        mode: str = "avg",
+        mode: str = "max",
         eps: float = 1.0e-05,
         top_k: float = 0.0,
     ) -> None:
@@ -104,7 +104,7 @@ class RelevancePropagationMaxPool2d(nn.Module):
         if mode == "avg":
             self.layer = torch.nn.AvgPool2d(kernel_size=(2, 2))
         elif mode == "max":
-            self.layer = layer
+            self.layer = torch.nn.MaxPool2d(kernel_size=1, stride=1)
 
         self.eps = eps
         self.top_k = top_k

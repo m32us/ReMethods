@@ -64,7 +64,7 @@ class LRPModel(nn.Module):
                 raise NotImplementedError(message)
 
         # Run backwards through layers
-        for i, layer in enumerate(flayers):
+        for i, layer in enumerate(flayers[::-1]):
             try:
                 flayers[i] = lookup_table[layer.__class__](
                     layer=layer, top_k=self.top_k)
