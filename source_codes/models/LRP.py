@@ -111,7 +111,7 @@ class LRPModel(nn.Module):
             for layer in self.feature_layers:
                 x = layer.forward(x)
                 activations.append(x)
-                print(x.shape)
+                # print(x.shape)
 
             # print(x.shape)
             # a
@@ -122,7 +122,7 @@ class LRPModel(nn.Module):
             for layer in self.classifier_layers:
                 x = layer.forward(x)
                 activations.append(x)
-                print(x.shape)
+                # print(x.shape)
 
         # Reverse order of activations to run backwards through model
         activations = activations[::-1]
@@ -137,11 +137,11 @@ class LRPModel(nn.Module):
             if i == len(self.clrp_layers) - 1:
                 x = x.view(x.size(0), -1)
             relevance = layer.forward(x, relevance)
-            print(x.shape)
+            # print(x.shape)
 
         for i, layer in enumerate(self.flrp_layers):
             x = activations.pop(0)
             relevance = layer.forward(x, relevance)
-            print(x.shape)
+            # print(x.shape)
 
         return relevance.permute(0, 2, 3, 1).sum(dim=-1).squeeze().detach().cpu()
