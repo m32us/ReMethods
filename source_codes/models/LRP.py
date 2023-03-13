@@ -113,9 +113,11 @@ class LRPModel(nn.Module):
                 activations.append(x)
                 print(x.shape)
 
+            # print(x.shape)
+            # a
             x = x.view(x.size(0), -1)
-            activations.append(x)
-            print(x.shape)
+            # activations.append(x)
+            # print(x.shape)
 
             for layer in self.classifier_layers:
                 x = layer.forward(x)
@@ -132,6 +134,8 @@ class LRPModel(nn.Module):
         # Perform relevance propagation
         for i, layer in enumerate(self.clrp_layers):
             x = activations.pop(0)
+            if i == len(self.clrp_layers) - 1:
+                x = x.view(x.size(0), -1)
             relevance = layer.forward(x, relevance)
             print(x.shape)
 
