@@ -2,7 +2,15 @@
 
 Implementation of unsupervised Layer-wise Relevance Propagation (LRP, Bach et al., Montavon et al.) in PyTorch with Mixed-Precision Training for VGG networks from scratch. [This tutorial](https://git.tu-berlin.de/gmontavon/lrp-tutorial) served as a starting point. In this implementation, we provide study about Layer-wise Relevance Propagation in our master class (HCMUS Master Course - Research Methodologies), and an framework that easy to understand for PyTorch users.
 
-In this repository, we base on a novel relevance propagation filter to this implementation resulting in much crisper heatmaps that could be found in [Fischer, Kai's blog](https://kaifishr.github.io/)
+In this repository, we base on a novel relevance propagation filter to this implementation resulting in much crisper heatmaps that could be found in [Fischer, Kai's blog](https://kaifishr.github.io/). We provide two strategies for training your network, normal way like you learned in your school, and mixed precision training. Furthermore, we use layer-wise propagation helps us to identify input features that were relevant for network’s classification decision. Almost source code you can see in [Layer-wise Relevance Propagation in PyTorch](https://github.com/kaifishr/PyTorchRelevancePropagation) by Fischer, Kai. For producing experiment results, we use GTX 1050 Nvidia graphics card. The FPS can be improved with other stronger graphics card.
+
+Useful resources:
+
+[1] [On Pixel-Wise Explanations for Non-Linear Classifier Decisions by Layer-Wise Relevance Propagation](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0130140)
+
+[2] [Layer-Wise Relevance Propagation: An Overview](https://link.springer.com/chapter/10.1007%2F978-3-030-28954-6_10)
+
+[3] [LRP tutorial](https://git.tu-berlin.de/gmontavon/lrp-tutorial)
 
 ## General information
 
