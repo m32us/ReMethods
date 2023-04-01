@@ -4,6 +4,7 @@ from __future__ import print_function
 
 from .LRP import LRPModel
 from .VGG import VGG11
+from .ConvNet import ConvNet
 
 __all__ = [
     'LRPModel',
@@ -11,4 +12,6 @@ __all__ = [
     # 'VGG13',
     # 'VGG16',
     # 'VGG19'
+    'ConvNet',
+    'FFNet'
 ]

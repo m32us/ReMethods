@@ -5,7 +5,7 @@ from data_loaders import mnist_dataloader
 
 from loss_funcs import CrossEntropyLoss
 
-from models import VGG11
+from models import VGG11, ConvNet, FFNet
 
 from trainers import Trainer, MPTrainer
 from testers import Tester
@@ -45,7 +45,7 @@ print(f"Labels batch shape: {test_labels.size()}")
 
 loss_func = CrossEntropyLoss()
 
-model = VGG11(n_classes=10).cuda()
+model = FFNet(in_channels=3, hidden_channels=[300, 200, 100], out_channels=10).cuda()
 
 print(model)
 
@@ -55,11 +55,11 @@ print("Total number of parameters =", np.sum(
 trainer = MPTrainer(model, train_dataloader=train_dataloader, valid_dataloader=valid_dataloader,
                     train_epochs=25, valid_epochs=2, learning_rate=0.001, loss_func=loss_func, optimization_method='adam')
 
-# model, losses, accuracies = trainer.run()
+model, losses, accuracies = trainer.run()
 
-# trainer.save_model('saved_models/vgg11_mnist.model')
+trainer.save_model('saved_models/convnet_mnist.model')
 
-model_loaded = trainer.load_model('saved_models/vgg11_mnist.model')
+model_loaded = trainer.load_model('saved_models/convnet_mnist.model')
 
 tester = Tester(model=model_loaded,
                 test_dataloader=test_dataloader, use_gpu=True)
