@@ -46,6 +46,14 @@ Read the README in source codes folder.
 }
 ```
 
+## TODO
+
+[1] Implement LRP for Batch normalization
+
+[2] Add more optimization method for training neural networks.
+
+[3] Implement LRP for ResNet, DarkNet19, DarkNet53.
+
 ## Acknowledgements
 
 Thanks to my friends, [Tran Xuan Loc](https://github.com/stark4079), [Nguyen Bao Long](https://github.com/baolongnguyenmac)
