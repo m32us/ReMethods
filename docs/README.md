@@ -1,4 +1,4 @@
-# Layer-wise Relevance Propagation in PyTorch with Mixed-Precision Training
+# A study about Layer-wise Relevance Propagation in PyTorch
 
 Implementation of unsupervised layer-wise relevance propagation (LRP; Bach et al.; Montavon et al.) in PyTorch with mixed-precision training for VGG networks from scratch. [This tutorial](https://git.tu-berlin.de/gmontavon/lrp-tutorial) served as a starting point. In this implementation, we provide a study about layer-wise relevance propagation from our master's course (HCMUS Master Course: Research Methodologies) and a framework that is easy to understand for PyTorch users.
 
@@ -38,8 +38,8 @@ Read the README in source codes folder.
 ```
 
 ```
-@misc{blogpost,
-  title={Improved Layer-wise Relevance Propagation for PyTorch with Mixed-Precision Training},
+@misc{project,
+  title={A study about Layer-wise Relevance Propagation in PyTorch},
   author={Tran X. Loc, Nguyen B. Long, Le N. Nam},
   howpublished={\url{https://github.com/m32us/ReMethods}},
   year={2023}
